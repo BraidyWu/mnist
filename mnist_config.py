@@ -3,7 +3,7 @@
 # mnist_train.py
 num_input = 784
 num_output = 10
-num_hidden = 500
+num_hidden = 512
 
 # mnist_inference.py
 batch_size = 100
@@ -15,7 +15,7 @@ continue_step = 30000
 moving_average_decay = 0.99
 
 # mnist_train.py
-model_save_path = '/persisted_storage/Projects/mnist/saver'
+model_save_path = '/persisted_storage/Projects/mnist/dnn/saver'
 model_name = 'model.ckpt'
 
 # mnist_eval.py

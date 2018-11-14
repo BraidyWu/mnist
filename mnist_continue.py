@@ -2,20 +2,18 @@
 import os
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-
 import mnist_inference
 import mnist_train
 from mnist_config import *
-
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def continue_train(mnist):
     x = tf.placeholder(tf.float32, [None, mnist_inference.num_input], name='x-input')
     y_ = tf.placeholder(tf.float32, [None, mnist_inference.num_output], name='y-input')
+    
     regularizer = tf.contrib.layers.l2_regularizer(regularization_rate)
     y = mnist_inference.inference(x, regularizer)
     global_step = tf.Variable(0, trainable=False)
-    
-    saver = tf.train.Saver()
     
     variable_average = tf.train.ExponentialMovingAverage(moving_average_decay, global_step)
     variable_average_op = variable_average.apply(tf.trainable_variables())
@@ -31,7 +29,9 @@ def continue_train(mnist):
     train_step = tf.train.GradientDescentOptimizer(learning_rate).minimize(loss, global_step=global_step)
     with tf.control_dependencies([train_step, variable_average_op]):
         train_op = tf.no_op(name='train')
-        
+    
+    saver = tf.train.Saver()
+    
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         ckpt = tf.train.get_checkpoint_state(mnist_train.model_save_path)
@@ -48,8 +48,13 @@ def continue_train(mnist):
             return
 
 def main(argv=None):
+    old_v = tf.logging.get_verbosity()
+    tf.logging.set_verbosity(tf.logging.ERROR)
+
     mnist = input_data.read_data_sets(data_path, one_hot=True)
     continue_train(mnist)
+
+    tf.logging.set_verbosity(old_v)
 
 if __name__ == '__main__':
     tf.app.run()

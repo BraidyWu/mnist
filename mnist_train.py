@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
-
 import os
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 import mnist_inference
 from mnist_config import *
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 def train(mnist):
     x = tf.placeholder(tf.float32, [None, mnist_inference.num_input], name='x-input')
@@ -30,9 +30,11 @@ def train(mnist):
         train_op = tf.no_op(name='train')
     
     saver = tf.train.Saver()
+    
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        for i in range(training_step):
+        
+        for i in range(1, training_step+1):
             xs, ys = mnist.train.next_batch(batch_size)
             _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
             if i % 1000 == 0:
@@ -40,8 +42,13 @@ def train(mnist):
                 saver.save(sess, os.path.join(model_save_path, model_name), global_step=global_step)
 
 def main(argv=None):
+    old_v = tf.logging.get_verbosity()
+    tf.logging.set_verbosity(tf.logging.ERROR)
+
     mnist = input_data.read_data_sets(data_path, one_hot=True)
     train(mnist)
 
+    tf.logging.set_verbosity(old_v)
+    
 if __name__ == '__main__':
     tf.app.run()
