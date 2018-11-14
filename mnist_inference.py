@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import tensorflow as tf
-
-num_input = 784
-num_output = 10
-num_hidden = 500
+from mnist_config import *
 
 def get_weight_variable(shape, regularizer):
     weights = tf.get_variable(
