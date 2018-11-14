@@ -40,7 +40,7 @@ def train(mnist):
                 saver.save(sess, os.path.join(model_save_path, model_name), global_step=global_step)
 
 def main(argv=None):
-    mnist = input_data.read_data_sets('/persisted_storage/datasets/MNIST', one_hot=True)
+    mnist = input_data.read_data_sets(data_path, one_hot=True)
     train(mnist)
 
 if __name__ == '__main__':

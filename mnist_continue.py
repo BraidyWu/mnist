@@ -37,7 +37,7 @@ def continue_train(mnist):
         ckpt = tf.train.get_checkpoint_state(mnist_train.model_save_path)
         if ckpt and ckpt.model_checkpoint_path:
             saver.restore(sess, ckpt.model_checkpoint_path)
-            for i in range(1, training_step+1):
+            for i in range(1, continue_step+1):
                 xs, ys = mnist.train.next_batch(batch_size)
                 _, loss_value, step = sess.run([train_op, loss, global_step], feed_dict={x: xs, y_: ys})
                 if i % 1000 == 0:
