@@ -1,1 +1,1 @@
-# learn-python
+# DNN for mnist
